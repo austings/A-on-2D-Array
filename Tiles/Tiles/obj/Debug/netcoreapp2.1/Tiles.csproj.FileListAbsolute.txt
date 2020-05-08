@@ -1,0 +1,11 @@
+C:\Users\Austin\source\repos\Tiles\Tiles\bin\Debug\netcoreapp2.1\Tiles.deps.json
+C:\Users\Austin\source\repos\Tiles\Tiles\bin\Debug\netcoreapp2.1\Tiles.runtimeconfig.json
+C:\Users\Austin\source\repos\Tiles\Tiles\bin\Debug\netcoreapp2.1\Tiles.runtimeconfig.dev.json
+C:\Users\Austin\source\repos\Tiles\Tiles\bin\Debug\netcoreapp2.1\Tiles.dll
+C:\Users\Austin\source\repos\Tiles\Tiles\obj\Debug\netcoreapp2.1\Tiles.csprojAssemblyReference.cache
+C:\Users\Austin\source\repos\Tiles\Tiles\obj\Debug\netcoreapp2.1\Tiles.csproj.CoreCompileInputs.cache
+C:\Users\Austin\source\repos\Tiles\Tiles\obj\Debug\netcoreapp2.1\Tiles.AssemblyInfoInputs.cache
+C:\Users\Austin\source\repos\Tiles\Tiles\obj\Debug\netcoreapp2.1\Tiles.AssemblyInfo.cs
+C:\Users\Austin\source\repos\Tiles\Tiles\bin\Debug\netcoreapp2.1\Tiles.pdb
+C:\Users\Austin\source\repos\Tiles\Tiles\obj\Debug\netcoreapp2.1\Tiles.dll
+C:\Users\Austin\source\repos\Tiles\Tiles\obj\Debug\netcoreapp2.1\Tiles.pdb
