@@ -18,6 +18,8 @@ namespace Tiles
             this.locked = locked;
             if (locked)
                 amIRightPosition = true;
+            else
+                amIRightPosition = false;
         }
 
         public int[] getMyPosition()
@@ -52,8 +54,11 @@ namespace Tiles
 
         public void checkLock()
         {
-            if(amIRightPosition)
+            if (amIRightPosition)
+            {
+                //Console.WriteLine(myValue + " " + myPosition[0] + " " + myPosition[1]);
                 lockThis();
+            }
         }
 
         public bool isLocked()

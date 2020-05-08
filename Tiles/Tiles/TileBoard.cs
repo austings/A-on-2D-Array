@@ -11,6 +11,7 @@ namespace Tiles
         private TileNode[,] myBoard = new TileNode[5, 5];
         private List<string> myMoves = new List<string>();
         private TileBoard parent;
+        public int mDis;
         public int myG;
         public int myF;
         public int[] xPosition;
@@ -21,8 +22,9 @@ namespace Tiles
             myBoard = board;
             myMoves = moveList;
             myG = g;
-            myF = g + mDistance();
             xPosition = startPosition;
+            mDis = mDistance();
+            myF = g + mDis;
             this.parent = parent;
         }
 
@@ -55,6 +57,8 @@ namespace Tiles
         public int mDistance()
         {
             int distance = 0;
+            int weightedValue = getNumberOfLockedCells();
+
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
@@ -63,11 +67,40 @@ namespace Tiles
                     //In the usual case, which is to say a grid without wraparound, 
                     //we define the Manhattan distance from i, j to r, c as
                     //abs(r - i) + abs(c - j)
+                    //adding 'weights' to make the system prioritize top left numbers first.
+                    int itemValue = myBoard[i, j].getValue();
+
                     int thisDistance = 0;
-                    int goalI = (myBoard[i,j].getValue()-1) / 5;
-                    int goalJ = (myBoard[i,j].getValue()-1) % 5;
-                    thisDistance = Math.Abs(i - goalI) + Math.Abs(j - goalJ);
-                    if(thisDistance ==0)
+                    int distanceFromX = (Math.Abs(i - xPosition[0]) + Math.Abs(j - xPosition[1]));
+                    int goalI = (itemValue - 1) / 5;
+                    int goalJ = (itemValue -1) % 5;
+
+                    //Console.WriteLine(weightedValue);
+                    if (itemValue == 1)
+                        thisDistance = (Math.Abs(i - goalI) + Math.Abs(j - goalJ)) * distanceFromX * 100;
+                    else
+                    {
+                        if (itemValue == 2 | itemValue == 6)
+                            thisDistance = (Math.Abs(i - goalI) + Math.Abs(j - goalJ))* distanceFromX* 50;
+                        else
+                        {
+                            if (itemValue == 3 | itemValue == 7 || itemValue == 11)
+                                thisDistance = (Math.Abs(i - goalI) + Math.Abs(j - goalJ))* distanceFromX * 25;
+                            else
+                            {
+                                if (itemValue == 4 | itemValue == 8 || itemValue == 12 || itemValue == 16)
+                                    thisDistance = (Math.Abs(i - goalI) + Math.Abs(j - goalJ)) * distanceFromX * 10;
+                                else
+                                {
+                                    if (itemValue == 5 | itemValue == 9 || itemValue == 13 || itemValue == 17 || itemValue == 20)
+                                        thisDistance = (Math.Abs(i - goalI) + Math.Abs(j - goalJ)) * distanceFromX * 5;
+                                    else
+                                        thisDistance = (Math.Abs(i - goalI) + Math.Abs(j - goalJ)) * distanceFromX;
+                                }
+                            }
+                        }
+                    }
+                    if (thisDistance ==0)
                         myBoard[i, j].rightPosition(true);
                     else
                         myBoard[i, j].rightPosition(false);
@@ -75,7 +108,27 @@ namespace Tiles
                 }
             }
 
-            return distance;
+            return distance + weightedValue;
+        }
+
+
+        public int getNumberOfLockedCells()
+        {
+            Console.Write("Locked:");
+            int value = 24;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (myBoard[i, j].isLocked())
+                    {
+                        Console.Write(myBoard[i, j].getValue()+" ");
+                        value--;
+                    }
+
+                }
+            }
+            return value;
         }
 
         //get integer array of this board
@@ -139,43 +192,64 @@ namespace Tiles
             newBoard[xPosition[0], xPosition[1]].updateValue(myBoard[newXPos[0], newXPos[1]].getValue());
             newMove.Add(direction.ToString());
 
-            lockNodes(newBoard);
+            TileBoard returnMe = new TileBoard(newBoard, myG+1, newMove,newXPos, this);
 
-            return new TileBoard(newBoard, myG+1, newMove,newXPos, this);
+            returnMe.lockNodes();
+
+            return returnMe;
         }
 
         //Lock items starting from the top left that were correctly placed
-        public void lockNodes(TileNode[,] board)
+        public void lockNodes()
         {
             for (int i =0;i<5;i++)
             {
                 for(int j =0;j<5;j++)
                 {
-                    if(i==0&j==0)
-                    {
-                        board[i, j].checkLock();
-                    }
-                    //on the top row, we can lock only if the item to the left is locked
-                    if(i==0&j!=0)
-                    {
-                        board[i, j - 1].checkLock();
-                        if (board[i, j - 1].isLocked())
-                            board[i, j].checkLock();
-                        else
-                            break;
-                    }
-                    if(i!=0)
-                    {
-                        //everything else we can lock if the item above it is locked
-                        board[i-1, j].checkLock();
-                        if (board[i-1, j].isLocked())
-                            board[i, j].checkLock();
-                        else
-                            break;
-                    }
+                    determineLock(new int[] {i,j});
                 }
 
             }
+        }
+
+        public bool determineLock(int[] pos)
+        {
+            if (pos[0] == 0 & pos[1] == 0)
+            {
+                myBoard[pos[0], pos[1]].checkLock();
+                return myBoard[pos[0], pos[1]].isLocked();
+            }
+            else
+            {
+                if (pos[0] == 0 & pos[1] != 0)
+                {
+                    if (determineLock(new int[] { pos[0], pos[1] - 1 }))
+                    {
+                        myBoard[pos[0], pos[1]].checkLock();
+                        return myBoard[pos[0], pos[1]].isLocked();
+                    }
+                }
+                else
+                {
+                    if ((pos[0] != 0 & pos[1] == 0))
+                    {
+                        if (determineLock(new int[] { pos[0] - 1, pos[1] }))
+                        {
+                            myBoard[pos[0], pos[1]].checkLock();
+                            return myBoard[pos[0], pos[1]].isLocked();
+                        }
+                    }
+                    else
+                    {
+                        if (determineLock(new int[] { pos[0] - 1, pos[1] })& determineLock(new int[] { pos[0], pos[1]-1 }))
+                        {
+                            myBoard[pos[0], pos[1]].checkLock();
+                            return myBoard[pos[0], pos[1]].isLocked();
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         //returns X if last move is null

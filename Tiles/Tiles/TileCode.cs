@@ -91,11 +91,12 @@ namespace Tiles
             PrintBoard(start);
 
             TileBoard solution = A_star();
+            foreach (string move in solution.getMyMoves())
+                Console.Write(move);
 
 
-           
-            //enter the correct combination of steps
-            do
+                //enter the correct combination of steps
+                do
             {
                 try
                 {
@@ -150,9 +151,9 @@ namespace Tiles
                         index = i;
                     }
                 }
-                int mDis = currentBoard.mDistance();
-                //Console.WriteLine(map.Count + " " + mDis);
+                int mDis = currentBoard.mDis;
                 PrintBoard(currentBoard);
+                Console.WriteLine(mDis);
                 //if this is the goalBoard, save it
                 if (mDis == 0)
                 {
@@ -168,11 +169,12 @@ namespace Tiles
                 List<TileBoard> neighbors = getNeighbors(currentBoard);
                 foreach(TileBoard n in neighbors)
                 {
+
                     //int lowestF = 1000;
                     //if (n.myF < lowestF)//try and speed up by looking at the best neighbors only
                     //{
-                        //lowestF = n.myF;
-                        bool inOpenList = false;
+                    //lowestF = n.myF;
+                    bool inOpenList = false;
                         foreach (TileBoard open in map)
                         {
                             if (compareBoards(open, n))
@@ -211,7 +213,6 @@ namespace Tiles
                             if (!inClosedList)
                                 map.Add(n);
                         }
-                   // }
                 }
                 scannedItems.Add(currentBoard);
 
@@ -229,7 +230,7 @@ namespace Tiles
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    if (a.getBoard()[i, j] != b.getBoard()[i, j])
+                    if (a.getBoard()[i, j].getValue() != b.getBoard()[i, j].getValue())
                     {
                         match = false;
                         break;
