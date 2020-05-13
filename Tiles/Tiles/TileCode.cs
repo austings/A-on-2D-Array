@@ -153,6 +153,7 @@ namespace Tiles
                 }
                 int mDis = currentBoard.mDis;
                 PrintBoard(currentBoard);
+                //System.Threading.Thread.Sleep(50);
                 Console.WriteLine(mDis);
                 //if this is the goalBoard, save it
                 if (mDis == 0)

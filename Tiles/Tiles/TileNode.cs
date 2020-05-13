@@ -42,6 +42,11 @@ namespace Tiles
             amIRightPosition = value;
         }
 
+        public bool isRightPos()
+        {
+            return amIRightPosition;
+        }
+
         public bool getLocked()
         {
             return locked;
