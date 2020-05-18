@@ -1,6 +1,6 @@
 # Astar-search-on-a-2D-Array
 This was my first attempt on trying to solve a 5x5 tile game using A* search algorithm.
-This failed to solve the puzzle in time but in theory should work. In order of attempts,
+This failed to solve the puzzle in time but the algorithm still works. In order of attempts,
 this is what I tried to do:
 
 1) A* search normally- this took way too long as there are 25! possible combinations
